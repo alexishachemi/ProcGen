@@ -12,7 +12,7 @@ OBJ		=	$(SRC:%.c=$(OBJDIR)/%.o)
 
 # Flags
 
-CFLAGS	=	-Wall -Wextra -Iinclude
+CFLAGS	=	-Wall -Wextra -Iinclude -lm
 
 # Rules
 
