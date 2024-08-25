@@ -5,7 +5,6 @@ typedef struct {
     int y;
 } vec2_t;
 
-vec2_t vec2_new(int x, int y);
 float vec2_dist(vec2_t a, vec2_t b);
 void vec2_print(vec2_t vec);
 
