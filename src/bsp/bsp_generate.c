@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include "bsp.h"
 
@@ -19,4 +19,9 @@ bool bsp_generate(bsp_t *bsp)
     if (!bsp)
         return false;
     return generate(bsp, bsp->split_info.splits, rand() % 2);
+}
+
+void __attribute__((constructor)) init_gen()
+{
+    srand(time(NULL));
 }
