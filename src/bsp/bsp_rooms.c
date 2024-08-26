@@ -35,34 +35,38 @@ static vec2_t generate_room_size(rect_t rect, const bsp_room_info_t *info)
     return size;
 }
 
-bool bsp_add_room(bsp_t *bsp)
+static void place_room(bsp_t *bsp, vec2_t size)
 {
-    rect_t rect = {0};
-    vec2_t size = {0};
+    int available_spacing, spacing_offset = 0;
     vec2_t pos = {0};
-    int available_spacing = 0;
-    int spacing_offset = 0;
-    
-    if (!bsp)
-        return false;
-    rect = bsp->rect;
-    size = generate_room_size(rect, &bsp->room_info);
+    rect_t rect = bsp->rect;
+
     available_spacing = (rect.pos.x + (rect.size.x - size.x - 1)) - rect.pos.x;
-    if (available_spacing > size.x)
-        spacing_offset = available_spacing * bsp->room_info.spacing_rate;
+    spacing_offset = available_spacing * bsp->room_info.spacing_rate;
     pos.x = rand_range(
         rect.pos.x + spacing_offset,
         rect.pos.x + available_spacing - spacing_offset
     );
     spacing_offset = 0;
     available_spacing = (rect.pos.y + (rect.size.y - size.y - 1)) - rect.pos.y;
-    if (available_spacing > size.y)
-        spacing_offset = available_spacing * bsp->room_info.spacing_rate;
+    spacing_offset = available_spacing * bsp->room_info.spacing_rate;
     pos.y = rand_range(
         rect.pos.y + spacing_offset,
         rect.pos.y + available_spacing - spacing_offset
     );
     bsp->room = (rect_t){pos, size};
+}
+
+bool bsp_add_room(bsp_t *bsp)
+{
+    vec2_t size = {0};
+    rect_t rect = {0};
+    
+    if (!bsp)
+        return false;
+    rect = bsp->rect;
+    size = generate_room_size(rect, &bsp->room_info);
+    place_room(bsp, size);
     return true;
 }
 
