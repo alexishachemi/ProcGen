@@ -59,7 +59,8 @@ bool bsp_set_room_info(
     float max_ratio,
     int min_coverage_percent,
     int max_coverage_percent,
-    float spacing_rate
+    float spacing_rate,
+    int link_min_touch_overlap
 )
 {
     if (!bsp || min_coverage_percent < 0 || max_coverage_percent > 100
@@ -70,5 +71,6 @@ bool bsp_set_room_info(
     bsp->room_info.min_coverage_percent = min_coverage_percent;
     bsp->room_info.max_coverage_percent = max_coverage_percent;
     bsp->room_info.spacing_rate = spacing_rate;
+    bsp->room_info.link_min_touch_overlap = link_min_touch_overlap;
     return true;
 }

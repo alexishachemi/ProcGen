@@ -9,11 +9,10 @@ static bool link_bsps(bsp_t *a, bsp_t *b)
         && list_add_ptr(&b->adjacents, a);
 }
 
-static bool link_frontiers(list_t *a, list_t *b)
+static bool link_frontiers(list_t *a, list_t *b, int min_overlap)
 {
     bsp_t *bsp_a = NULL;
     bsp_t *bsp_b = NULL;
-    int min_overlap = 30;
 
     for (node_t *na = a->head; na; na = na->next) {
         bsp_a = na->data;
@@ -30,15 +29,18 @@ static bool link_frontiers(list_t *a, list_t *b)
 
 static bool match_adjacents(bsp_t *bsp)
 {
+    int min_overlap = 0;
+
     if (!bsp)
         return false;
+    min_overlap = bsp->room_info.link_min_touch_overlap;
     if (bsp_is_leaf(bsp))
         return true;
     if (bsp->split_orient == O_HORIZONTAL)
         return link_frontiers(&bsp->sub1->frontiers.south,
-            &bsp->sub2->frontiers.north);
+            &bsp->sub2->frontiers.north, min_overlap);
     return link_frontiers(&bsp->sub1->frontiers.east,
-        &bsp->sub2->frontiers.west);
+        &bsp->sub2->frontiers.west, min_overlap);
 }
 
 static bool generate(bsp_t *bsp, int splits, orient_t orient)

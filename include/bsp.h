@@ -19,6 +19,7 @@ typedef struct {
     int min_coverage_percent;
     int max_coverage_percent;
     float spacing_rate;
+    int link_min_touch_overlap;
 } bsp_room_info_t;
 
 typedef struct {
@@ -43,9 +44,20 @@ struct bsp_s {
 bsp_t *bsp_create(rect_t rect);
 bsp_t *bsp_from_parent(const bsp_t *bsp, rect_t rect);
 void bsp_destroy(bsp_t *bsp);
-bool bsp_set_split_info(bsp_t *bsp, int splits, float max_ratio, int same_split_percent);
-bool bsp_set_room_info(bsp_t *bsp, float max_ratio,
-    int min_coverage_percent, int max_coverage_percent, float spacing_rate);
+bool bsp_set_split_info(
+    bsp_t *bsp,
+    int splits,
+    float max_ratio,
+    int same_split_percent
+);
+bool bsp_set_room_info(
+    bsp_t *bsp,
+    float max_ratio,
+    int min_coverage_percent,
+    int max_coverage_percent,
+    float spacing_rate,
+    int link_min_touch_overlap
+);
 bool bsp_generate(bsp_t *bsp);
 bool bsp_split(bsp_t *bsp, orient_t orient);
 bool bsp_add_room(bsp_t *bsp);
