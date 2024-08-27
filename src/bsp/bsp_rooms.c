@@ -12,7 +12,7 @@ static vec2_t get_bounds(int smallest_size, int area, float max_ratio)
     return (vec2_t){a, b};
 }
 
-static vec2_t generate_room_size(rect_t rect, const bsp_room_info_t *info)
+static vec2_t generate_room_size(rect_t rect, const bsp_room_settings_t *info)
 {
     int r_area = 0;
     int area = 0;
@@ -42,14 +42,14 @@ static void place_room(bsp_t *bsp, vec2_t size)
     rect_t rect = bsp->rect;
 
     available_spacing = (rect.pos.x + (rect.size.x - size.x - 1)) - rect.pos.x;
-    spacing_offset = available_spacing * bsp->room_info.spacing_rate;
+    spacing_offset = available_spacing * bsp->r_settings.spacing_rate;
     pos.x = rand_range(
         rect.pos.x + spacing_offset,
         rect.pos.x + available_spacing - spacing_offset
     );
     spacing_offset = 0;
     available_spacing = (rect.pos.y + (rect.size.y - size.y - 1)) - rect.pos.y;
-    spacing_offset = available_spacing * bsp->room_info.spacing_rate;
+    spacing_offset = available_spacing * bsp->r_settings.spacing_rate;
     pos.y = rand_range(
         rect.pos.y + spacing_offset,
         rect.pos.y + available_spacing - spacing_offset
@@ -65,7 +65,7 @@ bool bsp_add_room(bsp_t *bsp)
     if (!bsp)
         return false;
     rect = bsp->rect;
-    size = generate_room_size(rect, &bsp->room_info);
+    size = generate_room_size(rect, &bsp->r_settings);
     place_room(bsp, size);
     return true;
 }

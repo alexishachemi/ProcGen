@@ -12,7 +12,7 @@ typedef struct {
     float max_ratio;
     int splits;
     int same_split_percent;
-} bsp_split_info_t;
+} bsp_split_settings_t;
 
 typedef struct {
     float max_ratio;
@@ -20,7 +20,7 @@ typedef struct {
     int max_coverage_percent;
     float spacing_rate;
     int link_min_touch_overlap;
-} bsp_room_info_t;
+} bsp_room_settings_t;
 
 typedef struct {
     list_t north;
@@ -35,8 +35,8 @@ struct bsp_s {
     bsp_t *sub1;
     bsp_t *sub2;
     orient_t split_orient;
-    bsp_split_info_t split_info;
-    bsp_room_info_t room_info;
+    bsp_split_settings_t s_settings;
+    bsp_room_settings_t r_settings;
     bsp_frontier_t frontiers;
     list_t adjacents;
 };
@@ -44,13 +44,13 @@ struct bsp_s {
 bsp_t *bsp_create(rect_t rect);
 bsp_t *bsp_from_parent(const bsp_t *bsp, rect_t rect);
 void bsp_destroy(bsp_t *bsp);
-bool bsp_set_split_info(
+bool bsp_set_split_settings(
     bsp_t *bsp,
     int splits,
     float max_ratio,
     int same_split_percent
 );
-bool bsp_set_room_info(
+bool bsp_set_room_settings(
     bsp_t *bsp,
     float max_ratio,
     int min_coverage_percent,

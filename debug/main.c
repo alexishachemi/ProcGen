@@ -58,8 +58,8 @@ static void generate(bsp_t **bsp_ptr)
     if (*bsp_ptr)
         bsp_destroy(*bsp_ptr);
     *bsp_ptr = bsp_create((rect_t){{0, 0}, vec2_sub_i(screen_size, 1)});
-    bsp_set_split_info(*bsp_ptr, 4, 2.7f, 0);
-    bsp_set_room_info(*bsp_ptr, 1.3f, 10, 20, 0.3, 20);
+    bsp_set_split_settings(*bsp_ptr, 2, 2.7f, 0);
+    bsp_set_room_settings(*bsp_ptr, 1.3f, 10, 20, 0.3, 20);
     bsp_generate(*bsp_ptr);
 }
 

@@ -33,7 +33,7 @@ static bool match_adjacents(bsp_t *bsp)
 
     if (!bsp)
         return false;
-    min_overlap = bsp->room_info.link_min_touch_overlap;
+    min_overlap = bsp->r_settings.link_min_touch_overlap;
     if (bsp_is_leaf(bsp))
         return true;
     if (bsp->split_orient == O_HORIZONTAL)
@@ -47,7 +47,7 @@ static bool generate(bsp_t *bsp, int splits, orient_t orient)
 {
     bool status = true;
 
-    if (rand() % 100 < bsp->split_info.same_split_percent)
+    if (rand() % 100 < bsp->s_settings.same_split_percent)
         orient = !orient;
     if (splits <= 0) {
         status = bsp_add_room(bsp);
@@ -65,7 +65,7 @@ bool bsp_generate(bsp_t *bsp)
 {
     if (!bsp)
         return false;
-    return generate(bsp, bsp->split_info.splits, rand() % 2);
+    return generate(bsp, bsp->s_settings.splits, rand() % 2);
 }
 
 void __attribute__((constructor)) init_gen()
