@@ -24,7 +24,9 @@ TOBJ	=	$(TSRC:%.c=$(OBJDIR)/%.o)
 
 # Flags
 
-CFLAGS	=	-Wall -Wextra -Iinclude -lm
+CFLAGS	=	-Wall -Wextra -Iinclude
+
+LDFLAGS	=	-lm -Llib/linked -llinked
 
 DFLAGS	=	-lraylib
 
@@ -32,28 +34,33 @@ TFLAGS	=	-lcriterion
 
 # Rules
 
-$(LNAME): $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) -shared
+$(LNAME): lib $(OBJ)
+	$(CC) -o $@ $(OBJ) $(CFLAGS) $(LDFLAGS) -shared
 
 all: $(LNAME)
 
+lib:
+	$(MAKE) -C lib/linked
+
 clean:
 	rm -rf $(OBJDIR)
+	$(MAKE) -C lib/linked clean
 
 fclean:	clean
 	rm -f $(NAME)
 	rm -f $(LNAME)
 	rm -f $(TNAME)
+	$(MAKE) -C lib/linked fclean
 
 re:	fclean all
 
-$(NAME):	$(LNAME) $(DOBJ)
-	$(CC) -o $@ $(DOBJ) -L. -l$(NAME) $(DFLAGS) $(CFLAGS)
+$(NAME):	lib $(LNAME) $(DOBJ)
+	$(CC) -o $@ $(DOBJ) -L. -l$(NAME) $(DFLAGS) $(CFLAGS) $(LDFLAGS)
 
 debug:	$(NAME)
 
-$(TNAME):	$(OBJ) $(TOBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(TFLAGS)
+$(TNAME):	lib $(OBJ) $(TOBJ)
+	$(CC) -o $@ $(OBJ) $(TOBJ) $(CFLAGS) $(LDFLAGS) $(TFLAGS)
 
 tests_run:	$(TNAME)
 	./$(TNAME)
@@ -62,4 +69,4 @@ $(OBJDIR)/%.o:	%.c
 	@mkdir -p $(@D)
 	$(CC) -o $@ -c $< $(CFLAGS) -fPIC
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re lib

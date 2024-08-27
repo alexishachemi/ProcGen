@@ -28,6 +28,7 @@ static bool split_horizontal(bsp_t *bsp)
     vec2_t bounds = {0};
     int n = 0;
 
+    bsp->split_orient = O_HORIZONTAL;
     bounds = compute_h_bounds(bsp->rect, bsp->split_info.max_ratio);
     n = rand_range(bounds.x, bounds.y);
     sub1 = (rect_t){
@@ -57,6 +58,7 @@ static bool split_vertical(bsp_t *bsp)
     vec2_t bounds = {0};
     int n = 0;
 
+    bsp->split_orient = O_VERTICAL;
     bounds = compute_v_bounds(bsp->rect, bsp->split_info.max_ratio);
     n = rand_range(bounds.x, bounds.y);
     sub1 = (rect_t){
@@ -79,13 +81,13 @@ static bool split_vertical(bsp_t *bsp)
     return true;
 }
 
-bool bsp_split(bsp_t *bsp, int split_dir)
+bool bsp_split(bsp_t *bsp, orient_t orient)
 {
     bool split_success = false;
 
     if (!bsp)
         return false;
-    if (split_dir)
+    if (orient == O_HORIZONTAL)
         split_success = split_horizontal(bsp);
     else
         split_success = split_vertical(bsp);

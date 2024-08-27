@@ -1,17 +1,62 @@
 #include <time.h>
 #include <stdlib.h>
 #include "bsp.h"
+#include "utils.h"
 
-static bool generate(bsp_t *bsp, int splits, int split_dir)
+static bool link_bsps(bsp_t *a, bsp_t *b)
 {
-    if (rand() % 100 < bsp->split_info.same_split_percent)
-        split_dir = !split_dir;
-    if (splits <= 0)
-        return bsp_add_room(bsp);
-    if (!bsp_split(bsp, split_dir))
+    return list_add_ptr(&a->adjacents, b)
+        && list_add_ptr(&b->adjacents, a);
+}
+
+static bool link_frontiers(list_t *a, list_t *b)
+{
+    bsp_t *bsp_a = NULL;
+    bsp_t *bsp_b = NULL;
+    int min_overlap = 30;
+
+    for (node_t *na = a->head; na; na = na->next) {
+        bsp_a = na->data;
+        for (node_t *nb = b->head; nb; nb = nb->next) {
+            bsp_b = nb->data;
+            if (rect_touching_overlap(bsp_a->rect, bsp_b->rect) < min_overlap)
+                continue;
+            if (!link_bsps(bsp_a, bsp_b))
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool match_adjacents(bsp_t *bsp)
+{
+    if (!bsp)
         return false;
-    return generate(bsp->sub1, splits - 1, !split_dir)
-        && generate(bsp->sub2, splits - 1, !split_dir);
+    if (bsp_is_leaf(bsp))
+        return true;
+    if (bsp->split_orient == O_HORIZONTAL)
+        return link_frontiers(&bsp->sub1->frontiers.south,
+            &bsp->sub2->frontiers.north);
+    return link_frontiers(&bsp->sub1->frontiers.east,
+        &bsp->sub2->frontiers.west);
+}
+
+static bool generate(bsp_t *bsp, int splits, orient_t orient)
+{
+    bool status = true;
+
+    if (rand() % 100 < bsp->split_info.same_split_percent)
+        orient = !orient;
+    if (splits <= 0) {
+        status = bsp_add_room(bsp);
+    } else {
+        status = bsp_split(bsp, orient)
+            && generate(bsp->sub1, splits - 1, !orient)
+            && generate(bsp->sub2, splits - 1, !orient);
+    }
+    return status
+        && bsp_generate_frontiers(bsp)
+        && match_adjacents(bsp);
 }
 
 bool bsp_generate(bsp_t *bsp)

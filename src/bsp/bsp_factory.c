@@ -11,6 +11,9 @@ bsp_t *bsp_create(rect_t rect)
         return NULL;
     memset(bsp, 0, sizeof(bsp_t));
     bsp->rect = rect;
+    bsp_frontier_init(&bsp->frontiers);
+    bsp->split_orient = O_NONE;
+    list_init(&bsp->adjacents);
     return bsp;
 }
 

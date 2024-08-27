@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include "vec2.h"
 
 typedef struct {
@@ -17,3 +18,4 @@ vec2_t rect_center(rect_t r);
 rect_t rect_merge(rect_t r1, rect_t r2);
 rect_t rect_grow(rect_t r, int n);
 int rect_area(rect_t r);
+int rect_touching_overlap(rect_t a, rect_t b);

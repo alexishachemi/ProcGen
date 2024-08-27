@@ -4,7 +4,7 @@
 
 vec2_t rect_center(rect_t r)
 {
-    return vec2_div_i(rect_end(r), 2);
+    return (vec2_t){r.pos.x + r.size.x / 2, r.pos.y + r.size.y / 2};
 }
 
 rect_t rect_merge(rect_t r1, rect_t r2)

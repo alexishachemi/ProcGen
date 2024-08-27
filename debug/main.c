@@ -26,13 +26,29 @@ static void draw_rect(rect_t r, Color color)
     DrawRectangle(r.pos.x, r.pos.y, r.size.x, r.size.y, color);
 }
 
-void draw_bsp(const bsp_t *bsp, int depth)
+static void draw_leaf(bsp_t *bsp)
+{
+    bsp_t *adj = NULL;
+    vec2_t center = rect_center(bsp->rect);
+    vec2_t adj_center = {0};
+
+    draw_rect(bsp->room, WHITE);
+    for (node_t *n = bsp->adjacents.head; n; n = n->next) {
+        adj = n->data;
+        adj_center = rect_center(adj->rect);
+        DrawLine(center.x, center.y, adj_center.x, adj_center.y, RED);
+    }
+}
+
+static void draw_bsp(bsp_t *bsp, int depth)
 {
     if (!bsp)
         return;
     draw_rect_lines(bsp->rect, GREEN);
-    if (bsp_is_leaf(bsp))
-        draw_rect(bsp->room, WHITE);
+    if (bsp_is_leaf(bsp)) {
+        draw_leaf(bsp);
+        return;
+    }
     draw_bsp(bsp->sub1, depth + 1);
     draw_bsp(bsp->sub2, depth + 1);
 }
