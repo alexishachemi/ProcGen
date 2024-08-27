@@ -37,6 +37,8 @@ void bsp_destroy(bsp_t *bsp)
         return;
     bsp_destroy(bsp->sub1);
     bsp_destroy(bsp->sub2);
+    bsp_frontier_deinit(&bsp->frontiers);
+    list_clear(&bsp->adjacents, NULL);
     free(bsp);
 }
 

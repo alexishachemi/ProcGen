@@ -52,4 +52,5 @@ bool bsp_add_room(bsp_t *bsp);
 bool bsp_is_leaf(const bsp_t *bsp);
 
 void bsp_frontier_init(bsp_frontier_t *frontier);
+void bsp_frontier_deinit(bsp_frontier_t *frontier);
 bool bsp_generate_frontiers(bsp_t *bsp);

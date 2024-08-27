@@ -11,6 +11,16 @@ void bsp_frontier_init(bsp_frontier_t *frontier)
     list_init(&frontier->west);
 }
 
+void bsp_frontier_deinit(bsp_frontier_t *frontier)
+{
+    if (!frontier)
+        return;
+    list_clear(&frontier->north, NULL);
+    list_clear(&frontier->south, NULL);
+    list_clear(&frontier->east, NULL);
+    list_clear(&frontier->west, NULL);
+}
+
 static bool bsp_update_frontier_h(bsp_t *bsp)
 {
     return list_add_list(&bsp->frontiers.north, &bsp->sub1->frontiers.north)

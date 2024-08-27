@@ -63,25 +63,32 @@ static void generate(bsp_t **bsp_ptr)
     bsp_generate(*bsp_ptr);
 }
 
-int main(void)
+static void display(bsp_t **bsp_ptr)
 {
-    bsp_t *bsp = NULL;
     bool pressed = false;
 
     InitWindow(screen_size.x, screen_size.y, "ProcGen - Debug");
     while (!WindowShouldClose()) {
         if (!pressed && IsKeyPressed(KEY_SPACE)) {
             pressed = true;
-            generate(&bsp);
+            generate(bsp_ptr);
         } else if (IsKeyReleased(KEY_SPACE)) {
             pressed = false;
         }
         BeginDrawing();
         ClearBackground(GRAY);
-        draw_bsp(bsp, 0);
+        draw_bsp(*bsp_ptr, 0);
         EndDrawing();
     }
     CloseWindow();
+}
+
+int main(void)
+{
+    bsp_t *bsp = NULL;
+
+    generate(&bsp);
+    display(&bsp);
     bsp_destroy(bsp);
     return 0;
 }
