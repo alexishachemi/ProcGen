@@ -7,6 +7,11 @@
 
 static vec2_t screen_size = {800, 600};
 
+static void draw_line(vec2_t from, vec2_t to, Color color)
+{
+    DrawLine(from.x, from.y, to.x, to.y, color);
+}
+
 static void draw_rect_lines(rect_t r, Color color)
 {
     vec2_t end = rect_end(r);
@@ -28,15 +33,29 @@ static void draw_rect(rect_t r, Color color)
 
 static void draw_leaf(bsp_t *bsp)
 {
-    bsp_t *adj = NULL;
-    vec2_t center = rect_center(bsp->room);
-    vec2_t adj_center = {0};
+    // bsp_t *adj = NULL;
+    // vec2_t center = rect_center(bsp->room);
+    // vec2_t adj_center = {0};
 
     draw_rect(bsp->room, WHITE);
-    for (node_t *n = bsp->adjacents.head; n; n = n->next) {
-        adj = n->data;
-        adj_center = rect_center(adj->room);
-        DrawLine(center.x, center.y, adj_center.x, adj_center.y, RED);
+    // for (node_t *n = bsp->adjacents.head; n; n = n->next) {
+    //     adj = n->data;
+    //     adj_center = rect_center(adj->room);
+    //     draw_line(center, adj_center, RED);
+    // }
+}
+
+void draw_tree(bsp_tree_t *tree)
+{
+    bsp_link_t *bsp_link = NULL;
+
+    for (node_t *n = tree->links.head; n; n = n->next) {
+        bsp_link = n->data;
+        draw_line(
+            rect_center(bsp_link->bsp1->room),
+            rect_center(bsp_link->bsp2->room),
+            BLUE
+        );
     }
 }
 
@@ -51,6 +70,8 @@ static void draw_bsp(bsp_t *bsp, int depth)
     }
     draw_bsp(bsp->sub1, depth + 1);
     draw_bsp(bsp->sub2, depth + 1);
+    if (depth <= 0)
+        draw_tree(&bsp->tree);
 }
 
 static void generate(bsp_t **bsp_ptr)
@@ -58,8 +79,9 @@ static void generate(bsp_t **bsp_ptr)
     if (*bsp_ptr)
         bsp_destroy(*bsp_ptr);
     *bsp_ptr = bsp_create((rect_t){{0, 0}, vec2_sub_i(screen_size, 1)});
-    bsp_set_split_settings(*bsp_ptr, 2, 2.7f, 0);
-    bsp_set_room_settings(*bsp_ptr, 1.3f, 10, 20, 0.3, 20);
+    bsp_set_split_settings(*bsp_ptr, 4, 2.7f, 0);
+    bsp_set_room_settings(*bsp_ptr, 1.3f, 10, 20, 0.3);
+    bsp_set_corridor_settings(*bsp_ptr, 10, 0.05);
     bsp_generate(*bsp_ptr);
 }
 

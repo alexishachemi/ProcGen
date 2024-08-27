@@ -19,8 +19,12 @@ typedef struct {
     int min_coverage_percent;
     int max_coverage_percent;
     float spacing_rate;
-    int link_min_touch_overlap;
 } bsp_room_settings_t;
+
+typedef struct {
+    int room_link_min_touch;
+    float cycling_rate;
+} bsp_corridor_settings_t;
 
 typedef struct {
     list_t north;
@@ -28,6 +32,22 @@ typedef struct {
     list_t east;
     list_t west;
 } bsp_frontier_t;
+
+typedef struct {
+    bsp_t *bsp1;
+    bsp_t *bsp2;
+} bsp_link_t;
+
+typedef struct {
+    list_t visited;
+    list_t links;
+} bsp_nav_t;
+
+typedef struct {
+    list_t groups;
+    list_t links;
+    list_t unused_links;
+} bsp_tree_t;
 
 struct bsp_s {
     rect_t rect;
@@ -37,8 +57,11 @@ struct bsp_s {
     orient_t split_orient;
     bsp_split_settings_t s_settings;
     bsp_room_settings_t r_settings;
+    bsp_corridor_settings_t c_settings;
     bsp_frontier_t frontiers;
     list_t adjacents;
+    list_t *group;
+    bsp_tree_t tree;
 };
 
 bsp_t *bsp_create(rect_t rect);
@@ -55,8 +78,12 @@ bool bsp_set_room_settings(
     float max_ratio,
     int min_coverage_percent,
     int max_coverage_percent,
-    float spacing_rate,
-    int link_min_touch_overlap
+    float spacing_rate
+);
+bool bsp_set_corridor_settings(
+    bsp_t *bsp,
+    int room_link_min_touch,
+    float cycling_rate
 );
 bool bsp_generate(bsp_t *bsp);
 bool bsp_split(bsp_t *bsp, orient_t orient);
@@ -66,3 +93,11 @@ bool bsp_is_leaf(const bsp_t *bsp);
 void bsp_frontier_init(bsp_frontier_t *frontier);
 void bsp_frontier_deinit(bsp_frontier_t *frontier);
 bool bsp_generate_frontiers(bsp_t *bsp);
+
+bool bsp_nav_init(bsp_nav_t *nav);
+void bsp_nav_deinit(bsp_nav_t *nav);
+bool bsp_nav_traverse(bsp_nav_t *nav, bsp_t *bsp);
+
+bool bsp_tree_init(bsp_tree_t *tree);
+void bsp_tree_deinit(bsp_tree_t *tree);
+bool bsp_generate_tree(bsp_tree_t *tree, bsp_t *bsp);

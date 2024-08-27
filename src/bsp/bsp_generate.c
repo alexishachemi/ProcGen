@@ -33,7 +33,7 @@ static bool match_adjacents(bsp_t *bsp)
 
     if (!bsp)
         return false;
-    min_overlap = bsp->r_settings.link_min_touch_overlap;
+    min_overlap = bsp->c_settings.room_link_min_touch;
     if (bsp_is_leaf(bsp))
         return true;
     if (bsp->split_orient == O_HORIZONTAL)
@@ -65,7 +65,8 @@ bool bsp_generate(bsp_t *bsp)
 {
     if (!bsp)
         return false;
-    return generate(bsp, bsp->s_settings.splits, rand() % 2);
+    return generate(bsp, bsp->s_settings.splits, rand() % 2)
+        && bsp_generate_tree(&bsp->tree, bsp);
 }
 
 void __attribute__((constructor)) init_gen()

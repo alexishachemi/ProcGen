@@ -14,6 +14,7 @@ bsp_t *bsp_create(rect_t rect)
     bsp_frontier_init(&bsp->frontiers);
     bsp->split_orient = O_NONE;
     list_init(&bsp->adjacents);
+    bsp_tree_init(&bsp->tree);
     return bsp;
 }
 
@@ -28,6 +29,7 @@ bsp_t *bsp_from_parent(const bsp_t *parent, rect_t rect)
         return NULL;
     bsp->s_settings = parent->s_settings;
     bsp->r_settings = parent->r_settings;
+    bsp->c_settings = parent->c_settings;
     return bsp;
 }
 
@@ -39,6 +41,7 @@ void bsp_destroy(bsp_t *bsp)
     bsp_destroy(bsp->sub2);
     bsp_frontier_deinit(&bsp->frontiers);
     list_clear(&bsp->adjacents, NULL);
+    bsp_tree_deinit(&bsp->tree);
     free(bsp);
 }
 
@@ -59,8 +62,7 @@ bool bsp_set_room_settings(
     float max_ratio,
     int min_coverage_percent,
     int max_coverage_percent,
-    float spacing_rate,
-    int link_min_touch_overlap
+    float spacing_rate
 )
 {
     if (!bsp || min_coverage_percent < 0 || max_coverage_percent > 100
@@ -71,6 +73,18 @@ bool bsp_set_room_settings(
     bsp->r_settings.min_coverage_percent = min_coverage_percent;
     bsp->r_settings.max_coverage_percent = max_coverage_percent;
     bsp->r_settings.spacing_rate = spacing_rate;
-    bsp->r_settings.link_min_touch_overlap = link_min_touch_overlap;
+    return true;
+}
+
+bool bsp_set_corridor_settings(
+    bsp_t *bsp,
+    int room_link_min_touch,
+    float cycling_rate
+)
+{
+    if (!bsp || cycling_rate < 0 || cycling_rate > 1)
+        return false;
+    bsp->c_settings.room_link_min_touch = room_link_min_touch;
+    bsp->c_settings.cycling_rate = cycling_rate;
     return true;
 }
