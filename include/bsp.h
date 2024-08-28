@@ -6,7 +6,7 @@
 
 typedef struct bsp_s bsp_t;
 
-typedef enum {O_NONE = -1, O_VERTICAL = 0, O_HORIZONTAL = 1} orient_t;
+enum orient_e {O_NONE = -1, O_VERTICAL = 0, O_HORIZONTAL = 1};
 
 typedef struct {
     float max_ratio;

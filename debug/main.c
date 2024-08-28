@@ -89,8 +89,8 @@ static void draw_bsp(bsp_t *bsp, int depth)
     }
     draw_bsp(bsp->sub1, depth + 1);
     draw_bsp(bsp->sub2, depth + 1);
-    if (depth <= 0)
-        draw_tree(&bsp->tree);
+    // if (depth <= 0)
+    //     draw_tree(&bsp->tree);
 }
 
 static void draw_corridors(procgen_t *pg)
@@ -99,7 +99,7 @@ static void draw_corridors(procgen_t *pg)
 
     for (node_t *n = pg->corridor_segments.head; n; n = n->next) {
         seg = n->data;
-        draw_sized_line(seg->a, seg->b, 1, BROWN);
+        draw_line(seg->a, seg->b, BROWN);
     }
 }
 
@@ -113,6 +113,7 @@ static void generate(procgen_t *pg)
 {
     if (pg->bsp)
         bsp_destroy(pg->bsp);
+    list_clear_free(&pg->corridor_segments);
     pg->bsp = bsp_create((rect_t){{0, 0}, vec2_sub_i(screen_size, 1)});
     bsp_set_split_settings(pg->bsp, 4, 2.7f, 0);
     bsp_set_room_settings(pg->bsp, 1.3f, 10, 20, 0.3);
@@ -146,7 +147,7 @@ int main(void)
 
     procgen_init(&pg);
     generate(&pg);
-    display(&pg);
+    // display(&pg);
     procgen_deinit(&pg);
     return 0;
 }

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "procgen.h"
 
 bool procgen_init(procgen_t *pg)
@@ -23,7 +24,3 @@ bool procgen_generate(procgen_t *pg)
         && procgen_add_corridors(pg);
 }
 
-bool procgen_add_corridors(procgen_t *pg)
-{
-    return true;
-}
