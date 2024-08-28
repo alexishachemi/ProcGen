@@ -6,7 +6,8 @@
 #include "procgen.h"
 #include "utils.h"
 
-static vec2_t screen_size = {300, 300};
+static vec2_t screen_size = {800, 800};
+static vec2_t map_size = {300, 300};
 
 
 static void draw_line(vec2_t from, vec2_t to, Color color)
@@ -140,14 +141,16 @@ static void generate(procgen_t *pg)
     if (pg->initialized)
         procgen_deinit(pg);
     procgen_init(pg);
-    procgen_generate(pg, screen_size);
+    procgen_generate(pg, map_size);
 }
 
 static void display(procgen_t *pg)
 {
     bool new_pressed = false;
     bool iter_pressed = false;
+    Camera2D cam = {0};
 
+    cam.zoom = min(screen_size.x / map_size.x, screen_size.y / map_size.y);
     InitWindow(screen_size.x, screen_size.y, "ProcGen - Debug");
     while (!WindowShouldClose()) {
         if (!new_pressed && IsKeyPressed(KEY_SPACE)) {
@@ -163,8 +166,10 @@ static void display(procgen_t *pg)
             iter_pressed = false;
         }
         BeginDrawing();
+        BeginMode2D(cam);
         ClearBackground(GRAY);
         draw_procgen(pg);
+        EndMode2D();
         EndDrawing();
     }
     CloseWindow();
@@ -183,19 +188,19 @@ int main(void)
         .max_ratio = 1.3,
         .min_coverage_percent = 10,
         .max_coverage_percent = 20,
-        .spacing_rate = 0.3
+        .spacing_rate = 0.5
     };
     pg.corridor_settings = (bsp_corridor_settings_t){
         .room_link_min_touch = 10,
         .cycling_rate = 0.1
     };
     pg.automaton_settings = (automaton_settings_t){
-        .iterations = 5,
-        .noise_on_percent = 64,
-        .cell_on_minimum_neighbors = 5,
+        .iterations = 10,
+        .noise_on_percent = 40,
+        .cell_on_minimum_neighbors = 4,
         .corridor_inner_size = 1,
-        .corridor_outer_size = 2,
-        .room_outline_size = 1
+        .corridor_outer_size = 9,
+        .room_outline_size = 3
     };
     generate(&pg);
     display(&pg);
