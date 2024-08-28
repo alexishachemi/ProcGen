@@ -105,7 +105,7 @@ static bool build_tree(bsp_tree_t *tree, bsp_nav_t *nav)
     bsp_link_t *link = NULL;
     int size = 0;
 
-    if (!tree || !nav)
+    if (!tree || !nav || nav->links.size <= 0)
         return false;
     size = nav->links.size;
     link = list_pop(&nav->links, rand() % nav->links.size);

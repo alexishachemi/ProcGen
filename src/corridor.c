@@ -76,7 +76,7 @@ bool procgen_add_corridors(procgen_t *pg)
 
     if (!pg)
         return false;
-    for (node_t *n = pg->bsp->tree.links.head; n; n = n->next) {
+    for (node_t *n = pg->bsp.tree.links.head; n; n = n->next) {
         l = n->data;
         if (add_straight_corridor(pg, l->bsp1->room, l->bsp2->room))
             continue;

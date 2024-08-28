@@ -103,22 +103,35 @@ static void draw_corridors(procgen_t *pg)
     }
 }
 
+static Color cell_to_clr(cell_t cell, Color on, Color off)
+{
+    if (cell == C_ON || cell == C_ALWAYS_ON)
+        return on;
+    return off;
+}
+
+static void draw_automaton(automaton_t *a, Color on, Color off)
+{
+    for (int y = 0; y < a->size.y; y++) {
+        for (int x = 0; x < a->size.x; x++) {
+            DrawPixel(x, y, cell_to_clr(automaton_get(a, x, y), on, off));
+        }
+    }
+}
+
 static void draw_procgen(procgen_t *pg)
 {
-    draw_bsp(pg->bsp, 0);
-    draw_corridors(pg);
+    // draw_bsp(&pg->bsp, 0);
+    // draw_corridors(pg);
+    draw_automaton(&pg->automaton, BLACK, WHITE);
 }
 
 static void generate(procgen_t *pg)
 {
-    if (pg->bsp)
-        bsp_destroy(pg->bsp);
-    list_clear_free(&pg->corridor_segments);
-    pg->bsp = bsp_create((rect_t){{0, 0}, vec2_sub_i(screen_size, 1)});
-    bsp_set_split_settings(pg->bsp, 4, 2.7f, 0);
-    bsp_set_room_settings(pg->bsp, 1.3f, 10, 20, 0.3);
-    bsp_set_corridor_settings(pg->bsp, 10, 0.05);
-    procgen_generate(pg);
+    if (pg->initialized)
+        procgen_deinit(pg);
+    procgen_init(pg);
+    procgen_generate(pg, screen_size);
 }
 
 static void display(procgen_t *pg)
@@ -143,11 +156,30 @@ static void display(procgen_t *pg)
 
 int main(void)
 {
-    procgen_t pg;
+    procgen_t pg = {0};
 
-    procgen_init(&pg);
+    pg.split_settings = (bsp_split_settings_t) {
+        .splits = 4,
+        .max_ratio = 2.7,
+        .same_split_percent = 0
+    };
+    pg.room_settings = (bsp_room_settings_t){
+        .max_ratio = 1.3,
+        .min_coverage_percent = 10,
+        .max_coverage_percent = 20,
+        .spacing_rate = 0.3
+    };
+    pg.corridor_settings = (bsp_corridor_settings_t){
+        .room_link_min_touch = 10,
+        .cycling_rate = 0.05
+    };
+    pg.automaton_settings = (automaton_settings_t){
+        .iterations = 1,
+        .noise_on_percent = 50,
+        .cell_on_minimum_neighbors = 4
+    };
     generate(&pg);
-    // display(&pg);
+    display(&pg);
     procgen_deinit(&pg);
     return 0;
 }

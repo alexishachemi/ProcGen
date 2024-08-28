@@ -26,7 +26,7 @@ rect_t rect_merge(rect_t r1, rect_t r2)
 
 rect_t rect_grow(rect_t r, int n)
 {
-    return (rect_t){vec2_sub_i(r.pos, n), vec2_add_i(r.size, n)};
+    return (rect_t){vec2_sub_i(r.pos, n), vec2_add_i(r.size, n * 2)};
 }
 
 int rect_area(rect_t r)

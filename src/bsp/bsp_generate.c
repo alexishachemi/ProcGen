@@ -1,4 +1,3 @@
-#include <time.h>
 #include <stdlib.h>
 #include "bsp.h"
 #include "utils.h"
@@ -67,9 +66,4 @@ bool bsp_generate(bsp_t *bsp)
         return false;
     return generate(bsp, bsp->s_settings.splits, rand() % 2)
         && bsp_generate_tree(&bsp->tree, bsp);
-}
-
-void __attribute__((constructor)) init_gen()
-{
-    srand(time(NULL));
 }

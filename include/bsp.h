@@ -9,8 +9,8 @@ typedef struct bsp_s bsp_t;
 enum orient_e {O_NONE = -1, O_VERTICAL = 0, O_HORIZONTAL = 1};
 
 typedef struct {
-    float max_ratio;
     int splits;
+    float max_ratio;
     int same_split_percent;
 } bsp_split_settings_t;
 
@@ -64,27 +64,12 @@ struct bsp_s {
     bsp_tree_t tree;
 };
 
+bool bsp_init(bsp_t *bsp, rect_t rect);
 bsp_t *bsp_create(rect_t rect);
 bsp_t *bsp_from_parent(const bsp_t *bsp, rect_t rect);
+void bsp_deinit(bsp_t *bsp);
 void bsp_destroy(bsp_t *bsp);
-bool bsp_set_split_settings(
-    bsp_t *bsp,
-    int splits,
-    float max_ratio,
-    int same_split_percent
-);
-bool bsp_set_room_settings(
-    bsp_t *bsp,
-    float max_ratio,
-    int min_coverage_percent,
-    int max_coverage_percent,
-    float spacing_rate
-);
-bool bsp_set_corridor_settings(
-    bsp_t *bsp,
-    int room_link_min_touch,
-    float cycling_rate
-);
+
 bool bsp_generate(bsp_t *bsp);
 bool bsp_split(bsp_t *bsp, orient_t orient);
 bool bsp_add_room(bsp_t *bsp);
