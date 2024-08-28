@@ -74,6 +74,7 @@ bool bsp_generate(bsp_t *bsp);
 bool bsp_split(bsp_t *bsp, orient_t orient);
 bool bsp_add_room(bsp_t *bsp);
 bool bsp_is_leaf(const bsp_t *bsp);
+bool bsp_get_leaves(bsp_t *bsp, list_t *buf);
 
 void bsp_frontier_init(bsp_frontier_t *frontier);
 void bsp_frontier_deinit(bsp_frontier_t *frontier);

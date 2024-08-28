@@ -4,14 +4,10 @@
 #include "automaton.h"
 
 typedef struct {
-    vec2_t a;
-    vec2_t b;
-} segment_t;
-
-typedef struct {
     bool initialized;
-    bsp_t bsp;
+    list_t zones;
     list_t corridor_segments;
+    bsp_t bsp;
     automaton_t automaton;
     bsp_split_settings_t split_settings;
     bsp_room_settings_t room_settings;

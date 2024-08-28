@@ -174,12 +174,15 @@ int main(void)
         .cycling_rate = 0.05
     };
     pg.automaton_settings = (automaton_settings_t){
-        .iterations = 1,
+        .iterations = 0,
         .noise_on_percent = 50,
-        .cell_on_minimum_neighbors = 4
+        .cell_on_minimum_neighbors = 4,
+        .corridor_inner_size = 1,
+        .corridor_outer_size = 0,
+        .room_outline_size = 10
     };
     generate(&pg);
-    display(&pg);
+    // display(&pg);
     procgen_deinit(&pg);
     return 0;
 }

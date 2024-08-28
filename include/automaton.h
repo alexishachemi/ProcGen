@@ -3,13 +3,25 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "vec2.h"
+#include "bsp.h"
+
+#define CELL_NH_SIZE 8
 
 typedef enum {C_OFF = 0, C_ON = 1, C_ALWAYS_ON, C_ALWAYS_OFF} cell_t;
+typedef vec2_t cell_nh_t[CELL_NH_SIZE];
+
+typedef struct {
+    vec2_t a;
+    vec2_t b;
+} segment_t;
 
 typedef struct {
     int iterations;
     int cell_on_minimum_neighbors;
     int noise_on_percent;
+    int corridor_inner_size;
+    int corridor_outer_size;
+    int room_outline_size;
 } automaton_settings_t;
 
 typedef struct {
@@ -23,4 +35,13 @@ void automaton_deinit(automaton_t *a);
 bool automaton_set(automaton_t *a, int x, int y, cell_t state);
 cell_t automaton_get(automaton_t *a, int x, int y);
 bool automaton_add_noise(automaton_t *a);
+void automaton_get_cell_neihbors_pos(cell_nh_t nh, int x, int y);
+int automaton_count_neighbors_on(automaton_t *a, int x, int y);
 bool automaton_generate(automaton_t *a);
+bool automaton_draw_rect(automaton_t *a, rect_t rect, cell_t cell);
+bool automaton_draw_point(automaton_t *a, vec2_t pos,
+    cell_t inner_cell, int inner_size, cell_t outer_cell, int outer_size);
+bool automaton_draw_line(automaton_t *a, segment_t *s,
+    cell_t inner_cell, int inner_size, cell_t outer_cell, int outer_size);
+bool automaton_draw_corridors(automaton_t *a, list_t *segments);
+bool automaton_draw_bsp_zones(automaton_t *a, list_t *zones);

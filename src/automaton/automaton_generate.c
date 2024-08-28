@@ -1,27 +1,5 @@
 #include "automaton.h"
 
-static int automaton_count_neighbors_on(automaton_t *a, int x, int y)
-{
-    int count = 0;
-    cell_t cell;
-    vec2_t neighbors[] = {
-        {x - 1, y},
-        {x - 1, y - 1},
-        {x - 1, y + 1},
-        {x + 1, y},
-        {x + 1, y - 1},
-        {x + 1, y + 1},
-        {x, y + 1},
-        {x, y - 1}
-    };
-
-    for (int i = 0; i < 8; i++) {
-        cell = automaton_get(a, neighbors[i].x, neighbors[i].y);
-        count += cell == C_ON || cell == C_ALWAYS_ON;
-    }
-    return count;
-}
-
 static bool automaton_copy(automaton_t *dest, automaton_t *src)
 {
     if (!automaton_init(dest, src->size))
@@ -68,5 +46,5 @@ static bool generate(automaton_t *a, int iterations)
 
 bool automaton_generate(automaton_t *a)
 {
-    return automaton_add_noise(a) && generate(a, a->settings.iterations);
+    return generate(a, a->settings.iterations);
 }

@@ -74,3 +74,13 @@ bool bsp_is_leaf(const bsp_t *bsp)
 {
     return bsp && !bsp->sub1 && !bsp->sub2;
 }
+
+bool bsp_get_leaves(bsp_t *bsp, list_t *buf)
+{
+    if (!bsp || !buf)
+        return false;
+    if (bsp_is_leaf(bsp))
+        return list_add_ptr(buf, bsp);
+    return bsp_get_leaves(bsp->sub1, buf)
+        && bsp_get_leaves(bsp->sub2, buf);
+}
