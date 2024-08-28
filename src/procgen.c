@@ -41,8 +41,8 @@ bool procgen_generate(procgen_t *pg, vec2_t size)
     return bsp_generate(&pg->bsp)
         && procgen_add_corridors(pg)
         && bsp_get_leaves(&pg->bsp, &pg->zones)
-        && automaton_add_noise(&pg->automaton)
         && automaton_draw_bsp_zones(&pg->automaton, &pg->zones)
         && automaton_draw_corridors(&pg->automaton, &pg->corridor_segments)
+        && automaton_add_noise(&pg->automaton)
         && automaton_generate(&pg->automaton);
 }

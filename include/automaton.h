@@ -39,9 +39,8 @@ void automaton_get_cell_neihbors_pos(cell_nh_t nh, int x, int y);
 int automaton_count_neighbors_on(automaton_t *a, int x, int y);
 bool automaton_generate(automaton_t *a);
 bool automaton_draw_rect(automaton_t *a, rect_t rect, cell_t cell);
-bool automaton_draw_point(automaton_t *a, vec2_t pos,
-    cell_t inner_cell, int inner_size, cell_t outer_cell, int outer_size);
-bool automaton_draw_line(automaton_t *a, segment_t *s,
-    cell_t inner_cell, int inner_size, cell_t outer_cell, int outer_size);
+bool automaton_draw_point(automaton_t *a, vec2_t pos, cell_t cell, int size);
+bool automaton_draw_line(automaton_t *a, segment_t *s, cell_t cell, int size);
 bool automaton_draw_corridors(automaton_t *a, list_t *segments);
 bool automaton_draw_bsp_zones(automaton_t *a, list_t *zones);
+bool automaton_c_constant(cell_t cell);

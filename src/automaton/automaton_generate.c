@@ -20,7 +20,7 @@ static void process_cell(automaton_t *a, automaton_t *ref, int x, int y)
     cell_t cell;
 
     current_cell = automaton_get(ref, x, y);
-    if (current_cell == C_ALWAYS_ON || current_cell == C_ALWAYS_OFF)
+    if (automaton_c_constant(current_cell))
         return;
     nh = automaton_count_neighbors_on(ref, x, y);
     cell = nh >= a->settings.cell_on_minimum_neighbors ? C_ON : C_OFF;

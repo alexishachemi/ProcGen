@@ -28,13 +28,23 @@ static cell_t random_cell(int on_percent)
 
 bool automaton_add_noise(automaton_t *a)
 {
+    cell_t cell;
+
     if (!a)
         return false;
     for (int y = 0; y < a->size.y; y++) {
         for (int x = 0; x < a->size.x; x++) {
+            cell = automaton_get(a, x, y);
+            if (cell == C_ALWAYS_OFF || cell == C_ALWAYS_ON)
+                continue;
             automaton_set(a, x, y,
                 random_cell(a->settings.noise_on_percent));
         }
     }
     return true;
+}
+
+bool automaton_c_constant(cell_t cell)
+{
+    return cell == C_ALWAYS_ON || cell == C_ALWAYS_OFF;
 }

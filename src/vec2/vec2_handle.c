@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "vec2.h"
+#include "utils.h"
 
 float vec2_dist(vec2_t a, vec2_t b)
 {

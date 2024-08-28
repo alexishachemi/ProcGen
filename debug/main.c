@@ -6,7 +6,7 @@
 #include "procgen.h"
 #include "utils.h"
 
-static vec2_t screen_size = {800, 600};
+static vec2_t screen_size = {300, 300};
 
 
 static void draw_line(vec2_t from, vec2_t to, Color color)
@@ -90,7 +90,7 @@ static void draw_bsp(bsp_t *bsp, int depth)
     draw_bsp(bsp->sub1, depth + 1);
     draw_bsp(bsp->sub2, depth + 1);
     // if (depth <= 0)
-    //     draw_tree(&bsp->tree);
+        // draw_tree(&bsp->tree);
 }
 
 static void draw_corridors(procgen_t *pg)
@@ -121,9 +121,18 @@ static void draw_automaton(automaton_t *a, Color on, Color off)
 
 static void draw_procgen(procgen_t *pg)
 {
-    // draw_bsp(&pg->bsp, 0);
     // draw_corridors(pg);
+    // draw_bsp(&pg->bsp, 0);
     draw_automaton(&pg->automaton, BLACK, WHITE);
+}
+
+static void iter_automaton(automaton_t *a)
+{
+    int old_iter = a->settings.iterations;
+
+    a->settings.iterations = 1;
+    automaton_generate(a);
+    a->settings.iterations = old_iter;
 }
 
 static void generate(procgen_t *pg)
@@ -136,15 +145,22 @@ static void generate(procgen_t *pg)
 
 static void display(procgen_t *pg)
 {
-    bool pressed = false;
+    bool new_pressed = false;
+    bool iter_pressed = false;
 
     InitWindow(screen_size.x, screen_size.y, "ProcGen - Debug");
     while (!WindowShouldClose()) {
-        if (!pressed && IsKeyPressed(KEY_SPACE)) {
-            pressed = true;
+        if (!new_pressed && IsKeyPressed(KEY_SPACE)) {
+            new_pressed = true;
             generate(pg);
         } else if (IsKeyReleased(KEY_SPACE)) {
-            pressed = false;
+            new_pressed = false;
+        }
+        if (!iter_pressed && IsKeyPressed(KEY_LEFT_ALT)) {
+            iter_pressed = true;
+            iter_automaton(&pg->automaton);
+        } else if (IsKeyReleased(KEY_LEFT_ALT)) {
+            iter_pressed = false;
         }
         BeginDrawing();
         ClearBackground(GRAY);
@@ -171,18 +187,18 @@ int main(void)
     };
     pg.corridor_settings = (bsp_corridor_settings_t){
         .room_link_min_touch = 10,
-        .cycling_rate = 0.05
+        .cycling_rate = 0.1
     };
     pg.automaton_settings = (automaton_settings_t){
-        .iterations = 0,
-        .noise_on_percent = 50,
-        .cell_on_minimum_neighbors = 4,
+        .iterations = 5,
+        .noise_on_percent = 64,
+        .cell_on_minimum_neighbors = 5,
         .corridor_inner_size = 1,
-        .corridor_outer_size = 0,
-        .room_outline_size = 10
+        .corridor_outer_size = 2,
+        .room_outline_size = 1
     };
     generate(&pg);
-    // display(&pg);
+    display(&pg);
     procgen_deinit(&pg);
     return 0;
 }

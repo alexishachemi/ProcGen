@@ -61,12 +61,15 @@ static bool add_turning_corridor(procgen_t *pg, bsp_t *from, bsp_t *to)
 static bool add_straight_corridor(procgen_t *pg, rect_t from, rect_t to)
 {
     segment_t *seg = NULL;
+    vec2_t a, b;
 
+    if (!rect_get_overlap_centers(from, to, &a, &b))
+        return false;
     seg = new_corridor_segment(pg);
     if (!seg)
         return false;
-    if (!rect_get_overlap_centers(from, to, &seg->a, &seg->b))
-        return false;
+    seg->a = a;
+    seg->b = b;
     return true;
 }
 
