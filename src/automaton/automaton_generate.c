@@ -13,6 +13,24 @@ static bool automaton_copy(automaton_t *dest, automaton_t *src)
     return true;
 }
 
+static bool switch_off_by_nh_count(automaton_t *a, int count)
+{
+    automaton_t ref;
+    
+    if (!automaton_copy(&ref, a))
+        return false;
+    for (int y = 0; y < a->size.y; y++) {
+        for (int x = 0; x < a->size.x; x++) {
+            if (automaton_get(&ref, x, y) != C_ON)
+                continue;
+            if (automaton_count_neighbors_on(&ref, x, y) == count)
+                automaton_set(a, x, y, C_OFF);
+        }
+    }
+    automaton_deinit(&ref);
+    return true;
+}
+
 static void process_cell(automaton_t *a, automaton_t *ref, int x, int y)
 {
     int nh = 0;
@@ -46,5 +64,10 @@ static bool generate(automaton_t *a, int iterations)
 
 bool automaton_generate(automaton_t *a)
 {
-    return generate(a, a->settings.iterations);
+    if (!generate(a, a->settings.iterations))
+        return false;
+    if (a->settings.apply_flood_fill && !automaton_flood_fill(a))
+        return false;
+    return switch_off_by_nh_count(a, 3)
+        && switch_off_by_nh_count(a, 1);
 }

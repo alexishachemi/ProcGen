@@ -53,16 +53,16 @@ static void draw_sized_line(vec2_t from, vec2_t to, int size, Color color)
 
 static void draw_leaf(bsp_t *bsp)
 {
-    // bsp_t *adj = NULL;
-    // vec2_t center = rect_center(bsp->room);
-    // vec2_t adj_center = {0};
+    bsp_t *adj = NULL;
+    vec2_t center = rect_center(bsp->room);
+    vec2_t adj_center = {0};
 
     draw_rect(bsp->room, WHITE);
-    // for (node_t *n = bsp->adjacents.head; n; n = n->next) {
-    //     adj = n->data;
-    //     adj_center = rect_center(adj->room);
-    //     draw_line(center, adj_center, RED);
-    // }
+    for (node_t *n = bsp->adjacents.head; n; n = n->next) {
+        adj = n->data;
+        adj_center = rect_center(adj->room);
+        draw_line(center, adj_center, RED);
+    }
 }
 
 void draw_tree(bsp_tree_t *tree)
@@ -90,8 +90,8 @@ static void draw_bsp(bsp_t *bsp, int depth)
     }
     draw_bsp(bsp->sub1, depth + 1);
     draw_bsp(bsp->sub2, depth + 1);
-    // if (depth <= 0)
-        // draw_tree(&bsp->tree);
+    if (depth <= 0)
+        draw_tree(&bsp->tree);
 }
 
 static void draw_corridors(procgen_t *pg)
@@ -127,6 +127,11 @@ static void draw_procgen(procgen_t *pg)
     draw_automaton(&pg->automaton, BLACK, WHITE);
 }
 
+static void fill_automaton(automaton_t *a)
+{
+    automaton_flood_fill(a);
+}
+
 static void iter_automaton(automaton_t *a)
 {
     int old_iter = a->settings.iterations;
@@ -148,6 +153,7 @@ static void display(procgen_t *pg)
 {
     bool new_pressed = false;
     bool iter_pressed = false;
+    bool fill_pressed = false;
     Camera2D cam = {0};
 
     cam.zoom = min(screen_size.x / map_size.x, screen_size.y / map_size.y);
@@ -164,6 +170,12 @@ static void display(procgen_t *pg)
             iter_automaton(&pg->automaton);
         } else if (IsKeyReleased(KEY_LEFT_ALT)) {
             iter_pressed = false;
+        }
+        if (!fill_pressed && IsKeyPressed(KEY_LEFT_CONTROL)) {
+            fill_pressed = true;
+            fill_automaton(&pg->automaton);
+        } else if (IsKeyReleased(KEY_LEFT_CONTROL)) {
+            fill_pressed = false;
         }
         BeginDrawing();
         BeginMode2D(cam);
@@ -196,14 +208,15 @@ int main(void)
     };
     pg.automaton_settings = (automaton_settings_t){
         .iterations = 10,
-        .noise_on_percent = 40,
-        .cell_on_minimum_neighbors = 4,
+        .noise_on_percent = 68,
+        .cell_on_minimum_neighbors = 5,
         .corridor_inner_size = 1,
         .corridor_outer_size = 9,
-        .room_outline_size = 3
+        .room_outline_size = 3,
+        .apply_flood_fill = true
     };
     generate(&pg);
-    display(&pg);
+    // display(&pg);
     procgen_deinit(&pg);
     return 0;
 }

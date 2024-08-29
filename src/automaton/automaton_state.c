@@ -1,14 +1,14 @@
 #include "stdlib.h"
 #include "automaton.h"
 
-static bool valid_pos(automaton_t *a, int x, int y)
+bool automaton_pos_is_valid(automaton_t *a, int x, int y)
 {
     return x >= 0 && x < a->size.x && y >= 0 && y < a->size.y;
 }
 
 bool automaton_set(automaton_t *a, int x, int y, cell_t state)
 {
-    if (!a || !valid_pos(a, x, y))
+    if (!a || !automaton_pos_is_valid(a, x, y))
         return false;
     a->map[y][x] = state;
     return true;
@@ -16,7 +16,7 @@ bool automaton_set(automaton_t *a, int x, int y, cell_t state)
 
 cell_t automaton_get(automaton_t *a, int x, int y)
 {
-    if (!a || !valid_pos(a, x, y))
+    if (!a || !automaton_pos_is_valid(a, x, y))
         return C_OFF;
     return a->map[y][x];
 }
