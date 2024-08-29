@@ -69,5 +69,6 @@ bool automaton_generate(automaton_t *a)
     if (a->settings.apply_flood_fill && !automaton_flood_fill(a))
         return false;
     return switch_off_by_nh_count(a, 3)
+        && switch_off_by_nh_count(a, 2)
         && switch_off_by_nh_count(a, 1);
 }

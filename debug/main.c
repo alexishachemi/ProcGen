@@ -6,7 +6,7 @@
 #include "procgen.h"
 #include "utils.h"
 
-static vec2_t screen_size = {800, 800};
+static vec2_t screen_size = {900, 900};
 static vec2_t map_size = {300, 300};
 
 
@@ -216,7 +216,7 @@ int main(void)
         .apply_flood_fill = true
     };
     generate(&pg);
-    // display(&pg);
+    display(&pg);
     procgen_deinit(&pg);
     return 0;
 }
