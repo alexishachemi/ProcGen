@@ -64,6 +64,10 @@ static bool generate(automaton_t *a, int iterations)
 
 bool automaton_generate(automaton_t *a)
 {
+    if (!a)
+        return false;
+    if (a->settings.iterations <= 0)
+        return true;
     if (!generate(a, a->settings.iterations))
         return false;
     if (a->settings.apply_flood_fill && !automaton_flood_fill(a))
