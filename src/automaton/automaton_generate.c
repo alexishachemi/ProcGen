@@ -13,7 +13,7 @@ static bool automaton_copy(automaton_t *dest, automaton_t *src)
     return true;
 }
 
-static bool switch_off_by_nh_count(automaton_t *a, int count)
+bool automaton_off_cells_by_neighbors(automaton_t *a, int count)
 {
     automaton_t ref;
     
@@ -72,7 +72,5 @@ bool automaton_generate(automaton_t *a)
         return false;
     if (a->settings.apply_flood_fill && !automaton_flood_fill(a))
         return false;
-    return switch_off_by_nh_count(a, 3)
-        && switch_off_by_nh_count(a, 2)
-        && switch_off_by_nh_count(a, 1);
+    return automaton_off_cells_by_neighbors(a, 3);
 }

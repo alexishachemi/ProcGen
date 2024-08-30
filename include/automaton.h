@@ -53,3 +53,4 @@ bool automaton_draw_corridors(automaton_t *a, list_t *segments);
 bool automaton_draw_bsp_zones(automaton_t *a, list_t *zones);
 bool automaton_c_constant(cell_t cell);
 bool automaton_flood_fill(automaton_t *a);
+bool automaton_off_cells_by_neighbors(automaton_t *a, int nh_count);
