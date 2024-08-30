@@ -42,14 +42,14 @@ static void place_room(bsp_t *bsp, vec2_t size)
     rect_t rect = bsp->rect;
 
     available_spacing = (rect.pos.x + (rect.size.x - size.x - 1)) - rect.pos.x;
-    spacing_offset = available_spacing * bsp->r_settings.spacing_rate;
+    spacing_offset = available_spacing * bsp->r_settings.spacing_scale / 2;
     pos.x = rand_range(
         rect.pos.x + spacing_offset,
         rect.pos.x + available_spacing - spacing_offset
     );
     spacing_offset = 0;
     available_spacing = (rect.pos.y + (rect.size.y - size.y - 1)) - rect.pos.y;
-    spacing_offset = available_spacing * bsp->r_settings.spacing_rate;
+    spacing_offset = available_spacing * bsp->r_settings.spacing_scale / 2;
     pos.y = rand_range(
         rect.pos.y + spacing_offset,
         rect.pos.y + available_spacing - spacing_offset

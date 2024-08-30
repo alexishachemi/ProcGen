@@ -18,7 +18,7 @@ typedef struct {
     float max_ratio;
     int min_coverage_percent;
     int max_coverage_percent;
-    float spacing_rate;
+    float spacing_scale;
 } bsp_room_settings_t;
 
 typedef struct {
