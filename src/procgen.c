@@ -3,11 +3,6 @@
 #include <time.h>
 #include "procgen.h"
 
-void __attribute__((constructor)) init_gen()
-{
-    srand(time(NULL));
-}
-
 bool procgen_init(procgen_t *pg)
 {
     if (!pg)
