@@ -32,6 +32,7 @@ $(LNAME): lib $(OBJ)
 all: $(LNAME)
 
 lib:
+	git submodule update --init --recursive
 	$(MAKE) -C lib/linked
 
 clean:
