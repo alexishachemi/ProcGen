@@ -207,11 +207,11 @@ int main(void)
         .cycling_rate = 0.1
     };
     pg.automaton_settings = (automaton_settings_t){
-        .iterations = 10,
-        .noise_on_percent = 68,
+        .iterations = 7,
+        .noise_on_percent = 65,
         .cell_on_minimum_neighbors = 5,
         .corridor_inner_size = 1,
-        .corridor_outer_size = 9,
+        .corridor_outer_size = 5,
         .room_outline_size = 3,
         .apply_flood_fill = true
     };
