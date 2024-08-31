@@ -4,6 +4,8 @@ ProcGen is a procedural generation library for creating room-based dungeons and 
 
 It is heavily based off of Pierre Vigier's [Dungeon and Cave Generation](https://pvigier.github.io/2019/06/23/vagabond-dungeon-cave-generation.html) blog post where he explains how he made the generation for his game, Vagabond.
 
+<center><img src="images/procgen.gif" width="300"></center>
+
 For more information about how to use the library and how generation works, check the [manual](MANUAL.md).
 
 ## Dependencies
