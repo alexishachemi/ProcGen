@@ -200,7 +200,7 @@ int main(void)
         .max_ratio = 1.3,
         .min_coverage_percent = 10,
         .max_coverage_percent = 20,
-        .spacing_rate = 0.5
+        .spacing_scale = 0.5
     };
     pg.corridor_settings = (bsp_corridor_settings_t){
         .room_link_min_touch = 10,
