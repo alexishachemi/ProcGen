@@ -135,10 +135,13 @@ static void fill_automaton(automaton_t *a)
 static void iter_automaton(automaton_t *a)
 {
     int old_iter = a->settings.iterations;
+    bool old_ff = a->settings.apply_flood_fill;
 
     a->settings.iterations = 1;
+    a->settings.apply_flood_fill = false;
     automaton_generate(a);
     a->settings.iterations = old_iter;
+    a->settings.apply_flood_fill = old_ff;
 }
 
 static void generate(procgen_t *pg)
@@ -192,7 +195,7 @@ int main(void)
     procgen_t pg = {0};
 
     pg.split_settings = (bsp_split_settings_t) {
-        .splits = 4,
+        .splits = 15,
         .max_ratio = 2.7,
         .same_split_percent = 0
     };
@@ -207,8 +210,8 @@ int main(void)
         .cycling_rate = 0.1
     };
     pg.automaton_settings = (automaton_settings_t){
-        .iterations = 7,
-        .noise_on_percent = 65,
+        .iterations = 15,
+        .noise_on_percent = 70,
         .cell_on_minimum_neighbors = 5,
         .corridor_inner_size = 1,
         .corridor_outer_size = 5,
