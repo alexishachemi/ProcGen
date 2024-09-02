@@ -54,6 +54,7 @@ struct bsp_s {
     rect_t room;
     bsp_t *sub1;
     bsp_t *sub2;
+    int depth;
     orient_t split_orient;
     bsp_split_settings_t s_settings;
     bsp_room_settings_t r_settings;
@@ -71,7 +72,7 @@ void bsp_deinit(bsp_t *bsp);
 void bsp_destroy(bsp_t *bsp);
 
 bool bsp_generate(bsp_t *bsp);
-bool bsp_split(bsp_t *bsp, orient_t orient);
+bool bsp_split(bsp_t *bsp);
 bool bsp_add_room(bsp_t *bsp);
 bool bsp_is_leaf(const bsp_t *bsp);
 bool bsp_get_leaves(bsp_t *bsp, list_t *buf);
@@ -79,6 +80,7 @@ bool bsp_get_leaves(bsp_t *bsp, list_t *buf);
 void bsp_frontier_init(bsp_frontier_t *frontier);
 void bsp_frontier_deinit(bsp_frontier_t *frontier);
 bool bsp_generate_frontiers(bsp_t *bsp);
+bool bsp_match_adjacents(bsp_t *bsp);
 
 bool bsp_nav_init(bsp_nav_t *nav);
 void bsp_nav_deinit(bsp_nav_t *nav);
@@ -87,3 +89,5 @@ bool bsp_nav_traverse(bsp_nav_t *nav, bsp_t *bsp);
 bool bsp_tree_init(bsp_tree_t *tree);
 void bsp_tree_deinit(bsp_tree_t *tree);
 bool bsp_generate_tree(bsp_tree_t *tree, bsp_t *bsp);
+
+bsp_t *bsp_find_shallow_leaf(bsp_t *bsp);

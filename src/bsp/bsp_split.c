@@ -81,15 +81,37 @@ static bool split_vertical(bsp_t *bsp)
     return true;
 }
 
-bool bsp_split(bsp_t *bsp, orient_t orient)
+static bool split(bsp_t *bsp, orient_t orient)
 {
-    bool split_success = false;
-
     if (!bsp)
         return false;
     if (orient == O_HORIZONTAL)
-        split_success = split_horizontal(bsp);
-    else
-        split_success = split_vertical(bsp);
-    return split_success;
+        return split_horizontal(bsp);
+    return split_vertical(bsp);
+}
+
+static orient_t get_orient(orient_t base_orient, bsp_t *bsp)
+{
+    orient_t orient = O_NONE;
+
+    orient = (base_orient + bsp->depth % 2) % 2;
+    if (rand() % 100 < bsp->s_settings.same_split_percent)
+        orient = !orient;
+    return orient;
+}
+
+bool bsp_split(bsp_t *bsp)
+{
+    orient_t base_orient = O_NONE;
+    bsp_t *to_split = NULL;
+
+    if (!bsp)
+        return false;
+    base_orient = rand() % 2;
+    for (int i = 0; i < bsp->s_settings.splits; i++) {
+        to_split = bsp_find_shallow_leaf(bsp);
+        if (!to_split || !split(to_split, get_orient(base_orient, to_split)))
+            return false;
+    }
+    return true;
 }

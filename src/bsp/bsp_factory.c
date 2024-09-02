@@ -37,6 +37,7 @@ bsp_t *bsp_from_parent(const bsp_t *parent, rect_t rect)
     bsp->s_settings = parent->s_settings;
     bsp->r_settings = parent->r_settings;
     bsp->c_settings = parent->c_settings;
+    bsp->depth = parent->depth + 1;
     return bsp;
 }
 
